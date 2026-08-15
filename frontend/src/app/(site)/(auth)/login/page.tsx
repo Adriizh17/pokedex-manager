@@ -15,13 +15,13 @@ export default function LoginPage() {
 	return (
 		<main className="flex min-h-screen items-center justify-center bg-black px-4">
 			<div className="w-full max-w-md">
-				<div className="w-full max-w-md overflow-hidden rounded-2xl shadow-sm ring-1 ring-red-200">
-					<div className="bg-blue-900 p-8 text-center">
+				<div className="w-full max-w-md overflow-hidden rounded-4xl shadow-sm ring-1 ring-red-200">
+					<div className="bg-blue-900 p-10 text-center">
 						<h1 className="text-3xl font-bold text-white">PokéDex Manager</h1>
 					</div>
 					<div className="bg-black p-1"></div>
 
-					<div className="bg-white p-8">
+					<div className="bg-white p-10">
 						<form className="space-y-5" action={formAction}>
 							<AuthInput
 								label="Email"

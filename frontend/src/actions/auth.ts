@@ -55,7 +55,7 @@ export async function login(
 	}
 
 	await setSessionCookie(token);
-	redirect("/");
+	redirect("/dashboard");
 }
 
 export async function logout() {
@@ -67,17 +67,19 @@ export async function registro(
 	state: AuthState,
 	formData: FormData
 ): Promise<AuthState> {
+	let token: string;
+
+	const parsed = registerSchema.safeParse(Object.fromEntries(formData));
+	if (!parsed.success) {
+		return {
+			success: false,
+			message: parsed.error.issues[0].message,
+		};
+	}
+
+	const { email, password, username } = parsed.data;
+
 	try {
-		const parsed = registerSchema.safeParse(Object.fromEntries(formData));
-		if (!parsed.success) {
-			return {
-				success: false,
-				message: parsed.error.issues[0].message,
-			};
-		}
-
-		const { email, password, username } = parsed.data;
-
 		const response = await fetch(`${API_ENDPOINT}/auth/register`, {
 			method: "POST",
 			headers: {
@@ -95,14 +97,14 @@ export async function registro(
 			};
 		}
 
-		return {
-			success: true,
-			message: "Registro exitoso",
-		};
+		token = data.token;
 	} catch {
 		return {
 			success: false,
 			message: "Ocurrio un error, intentalo de nuevo",
 		};
 	}
+
+	await setSessionCookie(token);
+	redirect("/dashboard");
 }
