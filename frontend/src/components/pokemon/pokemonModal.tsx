@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { PokemonDetails } from "@/types/pokemon";
-import { getPokemonDetails } from "@/actions/pokemon";
+import { getPokemonDescription, getPokemonDetails } from "@/actions/pokemon";
 import { addToMyCollection, deleteToMyCollection } from "@/actions/user";
 import Swal from "sweetalert2";
+import Markdown from "react-markdown";
 
 interface PokemonModalProps {
 	pokemonId: number | null;
@@ -21,6 +22,7 @@ export default function PokemonModal({
 	const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [description, setDescription] = useState("");
 
 	useEffect(() => {
 		if (!pokemonId) {
@@ -33,9 +35,15 @@ export default function PokemonModal({
 
 				if (pokemonDetail) {
 					setPokemon(pokemonDetail);
+
+					if (!pokemonDetail.inCollection) {
+						setLoading(false);
+						const description = await getPokemonDescription(pokemonDetail.name);
+						setDescription(description || "");
+					}
 				} else throw error;
 			} catch (error) {
-				console.error(error);
+				console.log(error);
 				setError("No se pudieron obtener los detalles del Pokémon");
 			} finally {
 				setLoading(false);
@@ -65,10 +73,10 @@ export default function PokemonModal({
 					});
 				} else throw error;
 			} catch (error) {
+				console.log(error);
 				Swal.fire({
 					icon: "error",
-					title:
-						"Ocurrio un error. Intentalo de nuevo",
+					title: "Ocurrio un error. Intentalo de nuevo",
 					showConfirmButton: false,
 					timer: 1500,
 				});
@@ -95,6 +103,7 @@ export default function PokemonModal({
 				});
 			} else throw error;
 		} catch (error) {
+			console.log(error);
 			Swal.fire({
 				icon: "error",
 				title: "Ocurrio un error. Intentalo de nuevo",
@@ -213,6 +222,22 @@ export default function PokemonModal({
 									)}
 								</div>
 							</div>
+						</div>
+
+						<div className="mt-6">
+							<h3 className="mb-3 text-lg font-semibold text-white">
+								✨ Descripción
+							</h3>
+
+							{description != "" ? (
+								<div className="flex flex-wrap gap-2">
+									<Markdown>{description}</Markdown>{" "}
+								</div>
+							) : (
+								<div className="flex min-h-[50px] items-center justify-center py-6">
+									<div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-purple-500" />
+								</div>
+							)}
 						</div>
 
 						<div className="mt-6">

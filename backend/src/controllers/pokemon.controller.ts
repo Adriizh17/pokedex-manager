@@ -5,6 +5,7 @@ import {
 	PokeApiPokemonResponse,
 } from "../interfaces/pokedex";
 import prisma from "../lib/prisma";
+import { generateText } from "../utils/utils";
 
 const getPokemonList: RequestHandler = async (req, res) => {
 	try {
@@ -62,6 +63,7 @@ const getPokemonList: RequestHandler = async (req, res) => {
 		});
 	}
 };
+
 const getPokemonDetails: RequestHandler = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -121,7 +123,30 @@ const getPokemonDetails: RequestHandler = async (req, res) => {
 	}
 };
 
+const getDescription: RequestHandler = async (req, res) => {
+	try {
+		const { pokemonName } = req.params;
+		const userId = req.user?.id;
+		let descriptionPokemon;
+
+		if (pokemonName != "") {
+			const prompt = `Dame una descripción de máximo 80 palabras del Pokémon ${pokemonName} donde me expliques de manera clara sus mejores habilidades y curiosidades que me inciten a agregar este Pokemon a mi colección Pokedex `;
+			descriptionPokemon = await generateText(prompt);
+		}
+		res
+			.status(200)
+			.json({ description: descriptionPokemon ? descriptionPokemon : "" });
+	} catch (error) {
+		console.error(error);
+
+		res.status(500).json({
+			error: "Error al obtener la descripción del pokemon",
+		});
+	}
+};
+
 export default {
 	getPokemonList,
 	getPokemonDetails,
+	getDescription,
 };

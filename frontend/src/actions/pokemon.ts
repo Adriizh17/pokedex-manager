@@ -50,3 +50,34 @@ export const getPokemonDetails = async (pokemonId: number) => {
 		return null;
 	}
 };
+
+export const getPokemonDescription = async (pokemonName: string) => {
+	try {
+		const token = await getSessionToken();
+
+		if (!token) {
+			return null;
+		}
+
+		const response = await fetch(
+			`${API_ENDPOINT}/pokemon/description/${pokemonName}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				cache: "no-store",
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error("Error al obtener la descripción del Pokémon");
+		}
+
+		const data: { description: string } = await response.json();
+
+		return data.description;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};

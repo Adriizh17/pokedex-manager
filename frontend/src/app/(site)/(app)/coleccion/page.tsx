@@ -27,10 +27,13 @@ export default function DashboardPage() {
 	return (
 		<main className="min-h-screen bg-black px-6 py-10">
 			<div className="mx-auto max-w-7xl">
-				<div className="mb-8">
+				<div className="mb-8 flex">
 					<p className="mt-2 text-sm text-white/50">
 						Explora tu colección, puedes eliminar los que ya no quieras.
 					</p>
+                    <div>
+                        <button></button>
+                    </div>
 				</div>
 
 				<PokemonGrid

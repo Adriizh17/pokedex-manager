@@ -7,6 +7,11 @@ const router = Router();
 
 router.get("/list", pokedexController.getPokemonList);
 router.get("/details/:id", authenticate, pokedexController.getPokemonDetails);
+router.get(
+	"/description/:pokemonName",
+	authenticate,
+	pokedexController.getDescription
+);
 
 router.post("/add", authenticate, userController.addPokemontoPokedex);
 router.get("/my-colection", authenticate, userController.myPokedex);
