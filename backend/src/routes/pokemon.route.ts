@@ -12,6 +12,11 @@ router.get(
 	authenticate,
 	pokedexController.getDescription
 );
+router.post(
+	"/analyze-image",
+	authenticate,
+	pokedexController.analyzeImage
+);
 
 router.post("/add", authenticate, userController.addPokemontoPokedex);
 router.get("/my-colection", authenticate, userController.myPokedex);

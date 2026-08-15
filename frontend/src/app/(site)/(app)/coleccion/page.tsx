@@ -29,6 +29,9 @@ export default function DashboardPage() {
 	return (
 		<main className="min-h-screen bg-black px-6 py-10">
 			<div className="mx-auto max-w-7xl">
+				<div className="py-4">
+					<h1 className="text-2xl font-bold text-white">Mi PokéDex</h1>
+				</div>
 				<div className="mb-8 flex justify-between">
 					<p className="mt-2 text-sm text-white/50">
 						Explora tu colección, puedes eliminar los que ya no quieras.
@@ -87,9 +90,7 @@ export default function DashboardPage() {
 				/>
 			)}
 
-			{showAnalise && (
-				<AnaliseModal onClose={() => setShowAnalise(false)} />
-			)}
+			{showAnalise && <AnaliseModal onClose={() => setShowAnalise(false)} />}
 		</main>
 	);
 }

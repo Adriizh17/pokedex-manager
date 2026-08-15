@@ -28,6 +28,7 @@ export default function DashboardPage() {
 		<main className="min-h-screen bg-black px-6 py-10">
 			<div className="mx-auto max-w-7xl">
 				<div className="mb-8">
+				<h1 className="text-2xl font-bold text-white">PokéDex</h1>
 					<p className="mt-2 text-sm text-white/50">
 						Explora todos los Pokémon y añadelos a tu colección.
 					</p>

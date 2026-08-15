@@ -5,7 +5,7 @@ import {
 	PokeApiPokemonResponse,
 } from "../interfaces/pokedex";
 import prisma from "../lib/prisma";
-import { generateText } from "../utils/utils";
+import { generateText, identifyPokemonFromImage } from "../utils/utils";
 
 const getPokemonList: RequestHandler = async (req, res) => {
 	try {
@@ -145,8 +145,54 @@ const getDescription: RequestHandler = async (req, res) => {
 	}
 };
 
+const analyzeImage: RequestHandler = async (req, res) => {
+	try {
+		const { image, mimeType } = req.body;
+
+		if (!image || !mimeType) {
+			return res.status(400).json({
+				error: "Se requiere una imagen para analizar",
+			});
+		}
+
+		const base64Image = image.includes(",") ? image.split(",")[1] : image;
+
+		const identified = await identifyPokemonFromImage(base64Image, mimeType);
+
+		if (!identified) {
+			return res.status(200).json({ found: false });
+		}
+
+		const response = await fetch(
+			`${config.POKEDEX_URL}/pokemon/${encodeURIComponent(
+				identified.name.toLowerCase().trim()
+			)}`
+		);
+
+		if (!response.ok) {
+			return res.status(200).json({ found: false });
+		}
+
+		const data = (await response.json()) as PokeApiPokemonResponse;
+
+		res.status(200).json({
+			found: true,
+			id: data.id,
+			name: data.name,
+			text: identified.text,
+		});
+	} catch (error) {
+		console.error(error);
+
+		res.status(500).json({
+			error: "Error al analizar la imagen",
+		});
+	}
+};
+
 export default {
 	getPokemonList,
 	getPokemonDetails,
 	getDescription,
+	analyzeImage,
 };
