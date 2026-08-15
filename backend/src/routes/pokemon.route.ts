@@ -16,5 +16,6 @@ router.get(
 router.post("/add", authenticate, userController.addPokemontoPokedex);
 router.get("/my-colection", authenticate, userController.myPokedex);
 router.delete("/delete", authenticate, userController.deletePokemontoPokedex);
+router.get("/analise", authenticate, userController.checkMyPokedex);
 
 export default router;

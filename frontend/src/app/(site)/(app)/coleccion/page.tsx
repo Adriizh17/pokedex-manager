@@ -1,6 +1,7 @@
 "use client";
 
 import { getMyCollection } from "@/actions/user";
+import AnaliseModal from "@/components/pokemon/analiseModal";
 import PokemonGrid from "@/components/pokemon/pokemonGrid";
 import PokemonModal from "@/components/pokemon/pokemonModal";
 import { Pokemon } from "@/types/pokemon";
@@ -12,6 +13,7 @@ export default function DashboardPage() {
 	const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(
 		null
 	);
+	const [showAnalise, setShowAnalise] = useState(false);
 
 	useEffect(() => {
 		const getPokemonPage = async () => {
@@ -27,13 +29,19 @@ export default function DashboardPage() {
 	return (
 		<main className="min-h-screen bg-black px-6 py-10">
 			<div className="mx-auto max-w-7xl">
-				<div className="mb-8 flex">
+				<div className="mb-8 flex justify-between">
 					<p className="mt-2 text-sm text-white/50">
 						Explora tu colección, puedes eliminar los que ya no quieras.
 					</p>
-                    <div>
-                        <button></button>
-                    </div>
+					<div>
+						<button
+							type="button"
+							onClick={() => setShowAnalise(true)}
+							className="rounded-lg border border-purple-500/40 bg-purple-500/15 px-4 py-2 text-sm font-medium text-purple-300 transition hover:bg-purple-500/25"
+						>
+							✨ Analizar mi colección
+						</button>
+					</div>
 				</div>
 
 				<PokemonGrid
@@ -77,6 +85,10 @@ export default function DashboardPage() {
 						}
 					}}
 				/>
+			)}
+
+			{showAnalise && (
+				<AnaliseModal onClose={() => setShowAnalise(false)} />
 			)}
 		</main>
 	);

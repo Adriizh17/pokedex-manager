@@ -99,3 +99,32 @@ export const deleteToMyCollection = async (pokemonId: number) => {
 		return null;
 	}
 };
+
+export const getAnalise = async () => {
+	try {
+		const token = await getSessionToken();
+
+		if (!token) {
+			return null;
+		}
+
+		const response = await fetch(`${API_ENDPOINT}/pokemon/analise`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			cache: "no-store",
+		});
+
+		if (!response.ok) {
+			throw new Error("Error al obtener la colección");
+		}
+
+		const data: { pokedexInfo: string } = await response.json();
+
+		return data.pokedexInfo;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};

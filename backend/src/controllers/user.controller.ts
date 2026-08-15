@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import config from "../config";
+import { generateText } from "../utils/utils";
 
 const userInfo = async (req: Request, res: Response) => {
 	try {
@@ -214,9 +215,87 @@ const deletePokemontoPokedex = async (req: Request, res: Response) => {
 	}
 };
 
+const checkMyPokedex = async (req: Request, res: Response) => {
+	try {
+		if (!req.user) {
+			return res.status(401).json({
+				message: "Se requiere autenticación. ",
+			});
+		}
+		const { id } = req.user;
+
+		const user = await prisma.user.findUnique({
+			where: {
+				id,
+			},
+			select: {
+				id: true,
+				email: true,
+				username: true,
+				createdAt: true,
+			},
+		});
+
+		if (!user) {
+			return res.status(404).json({
+				message: "Usuario no encontrado",
+			});
+		}
+
+		const [pokedexColeccion] = await Promise.all([
+			prisma.collection.findMany({
+				where: {
+					userId: id,
+				},
+				orderBy: {
+					pokemonId: "asc",
+				},
+			}),
+		]);
+
+		const pokedex = (
+			await Promise.all(
+				pokedexColeccion.map(async (pokemon) => {
+					const pokemonResponse = await fetch(
+						`${config.POKEDEX_URL}/pokemon/${pokemon.pokemonId}`
+					);
+
+					if (!pokemonResponse.ok) {
+						throw new Error(`Error al obtener el Pokemon`);
+					}
+
+					const pokemonData = (await pokemonResponse.json()) as any;
+
+					return pokemonData.name;
+				})
+			)
+		).join(", ");
+
+		const prompt = `Analiza mi colección de Pokémon: ${pokedex}.
+Genera un resumen de máximo 100 palabras, entretenido y fácil de leer. Incluye:
+Datos curiosos o patrones interesantes que encuentres.
+Los tipos de Pokémon que tengo en mayor cantidad y cuáles están menos representados.
+Qué tan variada es mi colección en cuanto a tipos.
+Pokémon destacados por ser legendarios, míticos, raros o especialmente interesantes, si esa información está disponible.
+Cualquier otro patrón llamativo de mi colección.  `;
+		const descriptionPokemon = await generateText(prompt);
+
+		return res.json({
+			pokedexInfo: descriptionPokemon,
+		});
+	} catch (error) {
+		console.error(error);
+
+		return res.status(400).json({
+			message: "Ocurrio un error, intentalo de nuevo",
+		});
+	}
+};
+
 export default {
 	userInfo,
 	addPokemontoPokedex,
 	myPokedex,
 	deletePokemontoPokedex,
+	checkMyPokedex,
 };
