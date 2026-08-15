@@ -19,7 +19,7 @@ const register = async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		if (error instanceof Error && error.message === "USER_ALREADY_EXISTS") {
-			return res.status(409).json({
+			return res.status(401).json({
 				message: "El usuario ya existe, inicia sesión.",
 			});
 		}
