@@ -224,21 +224,23 @@ export default function PokemonModal({
 							</div>
 						</div>
 
-						<div className="mt-6">
-							<h3 className="mb-3 text-lg font-semibold text-white">
-								✨ Descripción
-							</h3>
+						{!pokemon.inCollection && (
+							<div className="mt-6">
+								<h3 className="mb-3 text-lg font-semibold text-white">
+									✨ Descripción
+								</h3>
 
-							{description != "" ? (
-								<div className="flex flex-wrap gap-2">
-									<Markdown>{description}</Markdown>{" "}
-								</div>
-							) : (
-								<div className="flex min-h-[50px] items-center justify-center py-6">
-									<div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-purple-500" />
-								</div>
-							)}
-						</div>
+								{description != "" ? (
+									<div className="flex flex-wrap gap-2">
+										<Markdown>{description}</Markdown>{" "}
+									</div>
+								) : (
+									<div className="flex min-h-[50px] items-center justify-center py-6">
+										<div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-purple-500" />
+									</div>
+								)}
+							</div>
+						)}
 
 						<div className="mt-6">
 							<h3 className="mb-4 text-lg font-semibold text-white">

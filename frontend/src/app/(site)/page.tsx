@@ -34,7 +34,7 @@ export default async function Home() {
 										</form>
 									</div>
 								) : (
-									<div className="flex items-center justify-center gap-2">
+									<div className="flex flex-wrap items-center justify-center gap-2 px-4">
 										<Link href="/login" prefetch={false}>
 											<button className="mt-4 cursor-pointer bg-blue-900  font-semibold rounded-full px-8 py-2 text-blue hover:bg-blue-800 transition-colors">
 												Iniciar sesión

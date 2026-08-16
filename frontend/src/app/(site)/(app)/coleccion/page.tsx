@@ -32,15 +32,15 @@ export default function DashboardPage() {
 				<div className="py-4">
 					<h1 className="text-2xl font-bold text-white">Mi PokéDex</h1>
 				</div>
-				<div className="mb-8 flex justify-between">
-					<p className="mt-2 text-sm text-white/50">
+				<div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<p className="text-sm text-white/50">
 						Explora tu colección, puedes eliminar los que ya no quieras.
 					</p>
 					<div>
 						<button
 							type="button"
 							onClick={() => setShowAnalise(true)}
-							className="rounded-lg border border-purple-500/40 bg-purple-500/15 px-4 py-2 text-sm font-medium text-purple-300 transition hover:bg-purple-500/25"
+							className="w-full rounded-lg border border-purple-500/40 bg-purple-500/15 px-4 py-2 text-sm font-medium text-purple-300 transition hover:bg-purple-500/25 sm:w-auto"
 						>
 							✨ Analizar mi colección
 						</button>
